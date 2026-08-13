@@ -16,7 +16,7 @@ npm run check
 Builds:
 
 - `dist/learning-platform-content.iife.js` — browser global `LearningPlatformContent`
-- `dist/learning-platform-content.esm.js` — `getLearningPlatformContent()`
+- `dist/learning-platform-content.mjs` — `getLearningPlatformContent()`
 - `dist/learning-platform-content.cjs.js` — Node `require`
 
 ## Static hub usage

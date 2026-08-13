@@ -56,6 +56,6 @@ await writeFile(
   body + nodeHelpers + "\nmodule.exports = globalThis.LearningPlatformContent;\n"
 );
 await writeFile(
-  "dist/learning-platform-content.esm.js",
+  "dist/learning-platform-content.mjs",
   body + "\nexport function getLearningPlatformContent() {\n  return globalThis.LearningPlatformContent;\n}\n"
 );

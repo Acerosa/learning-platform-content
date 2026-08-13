@@ -12,7 +12,7 @@ test("public package metadata and build outputs exist", function () {
   [
     "dist/learning-platform-content.iife.js",
     "dist/learning-platform-content.cjs.js",
-    "dist/learning-platform-content.esm.js",
+    "dist/learning-platform-content.mjs",
     "schemas/week.schema.json",
     "schemas/activity.schema.json"
   ].forEach(function (relative) {
@@ -29,7 +29,7 @@ test("engine sources do not contain hub-specific identifiers", function () {
 });
 
 test("ESM bundle exports getLearningPlatformContent without Node helpers", function () {
-  const esm = fs.readFileSync(path.join(root, "dist/learning-platform-content.esm.js"), "utf8");
+  const esm = fs.readFileSync(path.join(root, "dist/learning-platform-content.mjs"), "utf8");
   assert.match(esm, /export function getLearningPlatformContent/);
   assert.doesNotMatch(esm, /require\("node:fs"\)/);
 });
@@ -39,4 +39,10 @@ test("CJS bundle exposes Node directory helpers", function () {
   assert.equal(typeof engine.nodeIo, "function");
   assert.equal(typeof engine.loadPackageFromDirectory, "function");
   assert.equal(typeof engine.validateDirectory, "function");
+});
+
+test("Node ESM import exposes getLearningPlatformContent", async function () {
+  const mod = await import("../dist/learning-platform-content.mjs");
+  assert.equal(typeof mod.getLearningPlatformContent, "function");
+  assert.equal(mod.getLearningPlatformContent().SCHEMA_VERSION, "0.1.0");
 });
