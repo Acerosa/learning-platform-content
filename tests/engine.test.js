@@ -36,8 +36,11 @@ test("package exports the canonical 0.1.0 engine", function () {
   assert.deepEqual([...engine.SESSION_KINDS], ["session", "independent-study", "homework", "revision", "retrieval"]);
   assert.equal(typeof engine.validatePackage, "function");
   assert.equal(typeof engine.renderActivity, "function");
-  assert.equal(typeof engine.importFromSheets, "function");
-  assert.ok(engine.getBlockType("single-choice").implemented);
+  assert.equal(typeof engine.renderSession, "function");
+  assert.equal(typeof engine.importJson, "function");
+  assert.equal(typeof engine.importExcel, "function");
+  assert.equal(typeof engine.sanitiseContent, "function");
+  assert.ok(engine.BlockRegistry.get("single-choice").implemented);
 });
 
 test("an empty canonical package validates", function () {

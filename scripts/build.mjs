@@ -10,7 +10,9 @@ const files = [
   "render.js",
   "importer.js",
   "excel.js",
-  "browser.js"
+  "sanitize.js",
+  "browser.js",
+  "public-api.js"
 ];
 
 const nodeHelpers = `
@@ -45,6 +47,47 @@ const nodeHelpers = `
 })(typeof globalThis !== "undefined" ? globalThis : this);
 `;
 
+const esmExports = `
+export function getLearningPlatformContent() {
+  return globalThis.LearningPlatformContent;
+}
+export function validateDocument() {
+  var api = getLearningPlatformContent();
+  return api.validateDocument.apply(api, arguments);
+}
+export function validatePackage() {
+  var api = getLearningPlatformContent();
+  return api.validatePackage.apply(api, arguments);
+}
+export function renderActivity() {
+  var api = getLearningPlatformContent();
+  return api.renderActivity.apply(api, arguments);
+}
+export function renderWeek() {
+  var api = getLearningPlatformContent();
+  return api.renderWeek.apply(api, arguments);
+}
+export function renderSession() {
+  var api = getLearningPlatformContent();
+  return api.renderSession.apply(api, arguments);
+}
+export function importJson() {
+  var api = getLearningPlatformContent();
+  return api.importJson.apply(api, arguments);
+}
+export function importExcel() {
+  var api = getLearningPlatformContent();
+  return api.importExcel.apply(api, arguments);
+}
+export function sanitiseContent() {
+  var api = getLearningPlatformContent();
+  return api.sanitiseContent.apply(api, arguments);
+}
+export const BlockRegistry = getLearningPlatformContent().BlockRegistry;
+export const supportedSchemas = getLearningPlatformContent().supportedSchemas;
+export const supportedVersions = getLearningPlatformContent().supportedVersions;
+`;
+
 await rm("dist", { recursive: true, force: true });
 await mkdir("dist", { recursive: true });
 
@@ -55,7 +98,5 @@ await writeFile(
   "dist/learning-platform-content.cjs.js",
   body + nodeHelpers + "\nmodule.exports = globalThis.LearningPlatformContent;\n"
 );
-await writeFile(
-  "dist/learning-platform-content.mjs",
-  body + "\nexport function getLearningPlatformContent() {\n  return globalThis.LearningPlatformContent;\n}\n"
-);
+await writeFile("dist/learning-platform-content.mjs", body + esmExports);
+await writeFile("dist/learning-platform-content.esm.js", body + esmExports);

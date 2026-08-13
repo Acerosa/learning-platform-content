@@ -5,13 +5,14 @@
   "license": "MIT",
   "type": "commonjs",
   "main": "./dist/learning-platform-content.cjs.js",
-  "module": "./dist/learning-platform-content.mjs",
+  "module": "./dist/learning-platform-content.esm.js",
   "browser": "./dist/learning-platform-content.iife.js",
   "exports": {
     ".": {
       "import": "./dist/learning-platform-content.mjs",
       "require": "./dist/learning-platform-content.cjs.js"
     },
+    "./esm": "./dist/learning-platform-content.esm.js",
     "./iife": "./dist/learning-platform-content.iife.js",
     "./package.json": "./package.json"
   },
