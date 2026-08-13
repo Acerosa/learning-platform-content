@@ -2,6 +2,10 @@
 
 Package version, schema version and compatibility policy are independent.
 
+Canonical repository: [Acerosa/learning-platform-content](https://github.com/Acerosa/learning-platform-content).
+
+The first release is tagged **v0.1.0**. That tag marks package **0.1.0** and schema **0.1.0**.
+
 ## Package version
 
 `@learning-platform/content` starts at **0.1.0**.

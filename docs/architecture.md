@@ -3,6 +3,8 @@
 `@learning-platform/content` owns the canonical curriculum contract extracted
 from the proven Unit 14 engine and Admin authoring MVP.
 
+Canonical repository: [Acerosa/learning-platform-content](https://github.com/Acerosa/learning-platform-content).
+
 ```text
 Authoring formats (JSON / Excel)
         │

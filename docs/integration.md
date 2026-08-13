@@ -1,5 +1,7 @@
 # Integration
 
+Canonical repository: [Acerosa/learning-platform-content](https://github.com/Acerosa/learning-platform-content).
+
 ## Ownership
 
 | Owner | Responsibility |

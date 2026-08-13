@@ -36,5 +36,13 @@
   ],
   "engines": {
     "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Acerosa/learning-platform-content.git"
+  },
+  "homepage": "https://github.com/Acerosa/learning-platform-content#readme",
+  "bugs": {
+    "url": "https://github.com/Acerosa/learning-platform-content/issues"
   }
 }

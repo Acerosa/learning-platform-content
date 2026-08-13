@@ -3,6 +3,8 @@
 GitHub Pages hubs have no bundler. Admin is an ESM application. This package
 ships both.
 
+Canonical repository: [Acerosa/learning-platform-content](https://github.com/Acerosa/learning-platform-content).
+
 ## Outputs
 
 | File | Use |

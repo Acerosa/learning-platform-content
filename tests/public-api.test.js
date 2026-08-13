@@ -43,7 +43,9 @@ test("required documentation exists", function () {
     "docs/schemas.md",
     "docs/versioning.md",
     "docs/browser-builds.md",
-    "docs/integration.md"
+    "docs/integration.md",
+    "docs/consumer-guide.md",
+    "docs/migration-guide.md"
   ].forEach(function (relative) {
     const content = fs.readFileSync(path.join(root, relative), "utf8");
     assert.ok(content.length > 300, relative);

@@ -3,6 +3,8 @@
 This document defines the supported `0.1.0` contract for hubs and Admin. It is
 normative for package consumers.
 
+Canonical repository: [Acerosa/learning-platform-content](https://github.com/Acerosa/learning-platform-content).
+
 Classifications:
 
 - **STABLE** — supported within the `0.1.x` compatibility policy.

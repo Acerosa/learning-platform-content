@@ -2,9 +2,11 @@
 
 `@learning-platform/content` is the shared curriculum contract for Learning Platform hubs and the Admin authoring portal.
 
+Canonical repository: [Acerosa/learning-platform-content](https://github.com/Acerosa/learning-platform-content).
+
 It owns canonical `lp.content.*` schemas, validation, block types, importers, sanitisation and generic render helpers. It does not own teaching copy, learner records, or publication.
 
-Version **0.1.0**. Schema version **0.1.0**.
+Version **0.1.0**. Schema version **0.1.0**. Tag **v0.1.0**.
 
 ## Install
 
@@ -41,4 +43,6 @@ GitHub Pages hubs copy the reviewed IIFE into `vendor/learning-platform-content/
 - [Versioning](docs/versioning.md)
 - [Browser builds](docs/browser-builds.md)
 - [Integration](docs/integration.md)
+- [Consumer guide](docs/consumer-guide.md)
+- [Migration guide](docs/migration-guide.md)
 - [Changelog](CHANGELOG.md)
