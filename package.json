@@ -1,0 +1,39 @@
+{
+  "name": "@learning-platform/content",
+  "version": "0.1.0",
+  "description": "Canonical lp.content.* schemas, validator, importers, block registry and render helpers for Learning Platform hubs and Admin.",
+  "license": "MIT",
+  "type": "commonjs",
+  "main": "./dist/learning-platform-content.cjs.js",
+  "module": "./dist/learning-platform-content.esm.js",
+  "browser": "./dist/learning-platform-content.iife.js",
+  "exports": {
+    ".": {
+      "import": "./dist/learning-platform-content.esm.js",
+      "require": "./dist/learning-platform-content.cjs.js"
+    },
+    "./iife": "./dist/learning-platform-content.iife.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "schemas",
+    "docs",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "npm run build && node --test tests/*.test.js",
+    "check": "npm test"
+  },
+  "keywords": [
+    "learning-platform",
+    "curriculum",
+    "content"
+  ],
+  "engines": {
+    "node": ">=20"
+  }
+}
