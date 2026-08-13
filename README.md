@@ -2,9 +2,9 @@
 
 `@learning-platform/content` is the shared curriculum contract for Learning Platform hubs and the Admin authoring portal.
 
-It owns canonical `lp.content.*` schemas, validation, block types, importers and generic render helpers. It does not own teaching copy, learner records, or publication.
+It owns canonical `lp.content.*` schemas, validation, block types, importers, sanitisation and generic render helpers. It does not own teaching copy, learner records, or publication.
 
-Version **0.1.0**.
+Version **0.1.0**. Schema version **0.1.0**.
 
 ## Install
 
@@ -16,31 +16,29 @@ npm run check
 Builds:
 
 - `dist/learning-platform-content.iife.js` — browser global `LearningPlatformContent`
-- `dist/learning-platform-content.mjs` — `getLearningPlatformContent()`
+- `dist/learning-platform-content.esm.js` / `.mjs` — named ESM exports
 - `dist/learning-platform-content.cjs.js` — Node `require`
 
-## Static hub usage
-
-Copy the reviewed IIFE into the hub vendor tree (same pattern as Core):
-
-```html
-<script src="./vendor/learning-platform-content/0.1.0/learning-platform-content.iife.js"></script>
-```
-
-Hubs keep learner draft/submit adapters locally. Point `APP_CONFIG.curriculumPackage` at that hub's canonical JSON directory.
-
-## Node
+## Public API
 
 ```js
-const engine = require("@learning-platform/content");
-const result = engine.validateDirectory("./content/my-hub");
-if (!result.valid) {
-  console.error(engine.formatIssues(result.issues));
-  process.exit(1);
-}
+import {
+  validatePackage,
+  renderActivity,
+  importJson,
+  sanitiseContent,
+  BlockRegistry
+} from "@learning-platform/content";
 ```
+
+GitHub Pages hubs copy the reviewed IIFE into `vendor/learning-platform-content/0.1.0/`. Point `APP_CONFIG.curriculumPackage` at that hub's canonical JSON directory.
 
 ## Documents
 
 - [Architecture](docs/architecture.md)
+- [Public API](docs/public-api.md)
+- [Schemas](docs/schemas.md)
+- [Versioning](docs/versioning.md)
+- [Browser builds](docs/browser-builds.md)
+- [Integration](docs/integration.md)
 - [Changelog](CHANGELOG.md)

@@ -1,6 +1,7 @@
 # Architecture
 
-`@learning-platform/content` owns the canonical curriculum contract.
+`@learning-platform/content` owns the canonical curriculum contract extracted
+from the proven Unit 14 engine and Admin authoring MVP.
 
 ```text
 Authoring formats (JSON / Excel)
@@ -10,6 +11,7 @@ Authoring formats (JSON / Excel)
         │
         ├── validator
         ├── block registry
+        ├── sanitisation
         ├── loader / resolver
         └── renderer
                 │
@@ -17,32 +19,39 @@ Authoring formats (JSON / Excel)
      learner hub / Admin preview
 ```
 
-## What this package owns
+## Package responsibilities
 
 - `lp.content.*` JSON schemas (`0.1.0`)
 - block type registry
-- package validation
+- package and document validation
 - JSON and sheet importers
+- import sanitisation (script tags, event handlers, `javascript:` URLs)
 - generic HTML render helpers
+- IIFE, ESM and CJS builds
+- documentation for ownership, API, schemas, versioning and integration
+
+## Consumer responsibilities
+
+Hubs own teaching copy, branding, navigation and learner draft/submit
+adapters. Admin owns authoring UI, local drafts, `.xlsx` parsing and
+workbook-specific sheet extensions. Core owns Auth. Backend owns learner
+records.
 
 ## What this package does not own
 
 - hub teaching copy or question banks
 - learner Auth, attempts, marks or RLS
-- Admin draft persistence
+- Admin draft persistence or publication
 - GitHub publishing
 - Core evidence / `submit_attempt` wiring
+- credentials or database code
 
-Learner draft storage and Core submission adapters stay in each hub.
-
-## Browser and Node
-
-GitHub Pages hubs copy the reviewed IIFE into `vendor/learning-platform-content/0.1.0/`, the same way they vendor Core.
-
-Node and Admin import `@learning-platform/content`. Admin uses `getLearningPlatformContent()` from the ESM build.
+The renderer is curriculum-neutral. It has no `if hub === "unit14"` branch.
 
 ## Provenance
 
-Extracted from Unit 14 `content/engine` after the curriculum-engine MVP proved:
+Extracted after Parts 1–5 proved:
 
 canonical JSON → learner renderer → Core evidence → backend attempts
+
+and Admin preview/export against the same objects.
