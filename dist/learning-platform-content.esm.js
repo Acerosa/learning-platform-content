@@ -1042,6 +1042,12 @@
     return "Planned";
   }
 
+  function activityVersionAttr(activity) {
+    var raw = activity && typeof activity.version === "string" ? activity.version.trim() : "";
+    if (/^\d+\.\d+$/.test(raw)) return raw + ".0";
+    return raw;
+  }
+
   function createPath(options, href) {
     if (!href) return "";
     if (/^(https?:|mailto:|#)/i.test(href)) return href;
@@ -1288,7 +1294,7 @@
     }
     return (
       '<article class="lp-activity panel" data-lp-activity="' + escapeHtml(activity.id) +
-      '" data-lp-activity-version="' + escapeHtml(activity.version || "0.1.0") + '">' +
+      '" data-lp-activity-version="' + escapeHtml(activityVersionAttr(activity)) + '">' +
       '<span class="' + statusClass(status) + '" role="status"><span aria-hidden="true">●</span> ' +
       statusLabel(status) + "</span>" +
       "<h3>" + escapeHtml(meta.title || "") + "</h3>" +
