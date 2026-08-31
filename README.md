@@ -4,9 +4,11 @@
 
 Canonical repository: [Acerosa/learning-platform-content](https://github.com/Acerosa/learning-platform-content).
 
-It owns canonical `lp.content.*` schemas, validation, block types, importers, sanitisation and generic render helpers. It does not own teaching copy, learner records, or publication.
+It owns canonical `lp.content.*` schemas, validation, block types, importers, sanitisation, learner-safe package transforms and generic render helpers. It does not own teaching copy, learner records, or publication.
 
-Version **0.1.0**. Schema version **0.1.0**. Tag **v0.1.0**.
+Learner bundles exclude authoritative marking data. Authoring packages keep full marking specs for Admin, catalogue import and tests.
+
+Version **0.1.2**. Schema version **0.1.0**. Tag **v0.1.2**.
 
 ## Install
 
@@ -29,6 +31,7 @@ import {
   renderActivity,
   importJson,
   sanitiseContent,
+  learnerSafePackage,
   BlockRegistry
 } from "@learning-platform/content";
 ```

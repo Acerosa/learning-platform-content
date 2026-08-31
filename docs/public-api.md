@@ -27,6 +27,9 @@ import {
   importJson,
   importExcel,
   sanitiseContent,
+  stripLearnerAnswerKeys,
+  learnerSafePackage,
+  assertLearnerSafePackage,
   BlockRegistry,
   supportedSchemas,
   supportedVersions
@@ -54,6 +57,9 @@ COMPAT entry so existing adapters do not rewrite every call.
 | `importJson(value)` | Canonical package from JSON object or string. |
 | `importExcel(sheets, hub?, curriculum?)` | Canonical package from parsed sheet objects or CSV text. |
 | `sanitiseContent(value)` | Reject script tags, event handlers and `javascript:` URLs. |
+| `stripLearnerAnswerKeys(value)` | Recursively remove authoritative marking fields. Aligns with the backend learner publication strip. |
+| `learnerSafePackage(value)` | Learner-safe derivative of a full authoring package. Source object is not mutated. |
+| `assertLearnerSafePackage(value)` | Throw if a package still contains authoritative marking fields. |
 | `BlockRegistry` | Registered block types and lookup helpers. |
 | `supportedSchemas` | Frozen `lp.content.*` schema ids. |
 | `supportedVersions` | Frozen supported `schemaVersion` values. Currently `["0.1.0"]`. |

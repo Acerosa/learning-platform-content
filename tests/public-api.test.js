@@ -8,7 +8,7 @@ const root = path.resolve(__dirname, "..");
 test("public package metadata and build outputs exist", function () {
   const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
   assert.equal(pkg.name, "@learning-platform/content");
-  assert.equal(pkg.version, "0.1.1");
+  assert.equal(pkg.version, "0.1.2");
   [
     "dist/learning-platform-content.iife.js",
     "dist/learning-platform-content.cjs.js",
@@ -68,6 +68,9 @@ test("Node ESM import exposes the documented public API", async function () {
   assert.equal(typeof mod.importJson, "function");
   assert.equal(typeof mod.importExcel, "function");
   assert.equal(typeof mod.sanitiseContent, "function");
+  assert.equal(typeof mod.stripLearnerAnswerKeys, "function");
+  assert.equal(typeof mod.learnerSafePackage, "function");
+  assert.equal(typeof mod.assertLearnerSafePackage, "function");
   assert.ok(mod.BlockRegistry);
   assert.ok(mod.supportedSchemas.includes("lp.content.activity"));
   assert.deepEqual([...mod.supportedVersions], ["0.1.0"]);
