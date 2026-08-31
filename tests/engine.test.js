@@ -71,6 +71,28 @@ test("renderActivity emits escaped HTML for a heading block", function () {
   assert.doesNotMatch(html, /<script>/);
 });
 
+test("renderActivity does not invent an activity version", function () {
+  const explicit = envelope(engine.SCHEMAS.ACTIVITY, "versioned-activity", { title: "Versioned" }, {}, {
+    version: "1.2.3",
+    blocks: []
+  });
+  assert.match(engine.renderActivity(explicit), /data-lp-activity-version="1.2.3"/);
+
+  const alias = envelope(engine.SCHEMAS.ACTIVITY, "alias-activity", { title: "Alias" }, {}, {
+    version: "1.0",
+    blocks: []
+  });
+  assert.match(engine.renderActivity(alias), /data-lp-activity-version="1.0.0"/);
+
+  const missing = envelope(engine.SCHEMAS.ACTIVITY, "unversioned-activity", { title: "Unversioned" }, {}, {
+    blocks: []
+  });
+  delete missing.version;
+  const html = engine.renderActivity(missing);
+  assert.match(html, /data-lp-activity-version=""/);
+  assert.doesNotMatch(html, /data-lp-activity-version="0\.1\.0"/);
+});
+
 test("importJSON accepts a canonical activity package", function () {
   const activity = envelope(engine.SCHEMAS.ACTIVITY, "demo-activity", { title: "Imported activity", status: "available" }, {}, {
     blocks: [engine.normaliseBlock({ id: "h1", type: "heading", content: { text: "Imported", level: 2 } })]
