@@ -11,6 +11,7 @@ const files = [
   "importer.js",
   "excel.js",
   "sanitize.js",
+  "learner-package.js",
   "browser.js",
   "public-api.js"
 ];
@@ -83,6 +84,19 @@ export function sanitiseContent() {
   var api = getLearningPlatformContent();
   return api.sanitiseContent.apply(api, arguments);
 }
+export function stripLearnerAnswerKeys() {
+  var api = getLearningPlatformContent();
+  return api.stripLearnerAnswerKeys.apply(api, arguments);
+}
+export function learnerSafePackage() {
+  var api = getLearningPlatformContent();
+  return api.learnerSafePackage.apply(api, arguments);
+}
+export function assertLearnerSafePackage() {
+  var api = getLearningPlatformContent();
+  return api.assertLearnerSafePackage.apply(api, arguments);
+}
+export const LEARNER_ANSWER_KEY_FIELDS = getLearningPlatformContent().LEARNER_ANSWER_KEY_FIELDS;
 export const BlockRegistry = getLearningPlatformContent().BlockRegistry;
 export const supportedSchemas = getLearningPlatformContent().supportedSchemas;
 export const supportedVersions = getLearningPlatformContent().supportedVersions;

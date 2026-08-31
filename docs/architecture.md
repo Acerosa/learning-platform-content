@@ -14,6 +14,7 @@ Authoring formats (JSON / Excel)
         ├── validator
         ├── block registry
         ├── sanitisation
+        ├── learner-safe package transform
         ├── loader / resolver
         └── renderer
                 │
@@ -28,6 +29,7 @@ Authoring formats (JSON / Excel)
 - package and document validation
 - JSON and sheet importers
 - import sanitisation (script tags, event handlers, `javascript:` URLs)
+- learner-safe package transform (learner bundles exclude authoritative marking data)
 - generic HTML render helpers
 - IIFE, ESM and CJS builds
 - documentation for ownership, API, schemas, versioning and integration

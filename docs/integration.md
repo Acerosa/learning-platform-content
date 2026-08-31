@@ -6,7 +6,7 @@ Canonical repository: [Acerosa/learning-platform-content](https://github.com/Ace
 
 | Owner | Responsibility |
 | --- | --- |
-| `@learning-platform/content` | Schemas, validator, importers, block registry, sanitisation, generic render helpers, browser/Node builds |
+| `@learning-platform/content` | Schemas, validator, importers, block registry, sanitisation, learner-safe package transform, generic render helpers, browser/Node builds |
 | Unit 14 hub | Teaching JSON, branding, routes, learner draft/submit adapters, vendored IIFE |
 | Admin | Authoring UI, local drafts, preview pane, `.xlsx` parsing, Options/Feedback sheet extensions, export |
 | Core | Auth, theme, learner-safe API, evidence helpers |
