@@ -85,16 +85,18 @@ test("accepted and checks are removed to match backend", function () {
   assert.equal("checks" in safe, false);
 });
 
-test("boolean correct is removed; string correct is retained", function () {
+test("boolean correct and object correct mappings are removed; string correct is retained", function () {
   const safe = engine.learnerSafePackage({
     options: [
       { id: "a", label: "Yes", correct: true },
       { id: "b", label: "No", correct: false }
     ],
+    placements: { correct: { find: "learner" } },
     note: { correct: "use this wording in teaching copy" }
   });
   assert.equal("correct" in safe.options[0], false);
   assert.equal("correct" in safe.options[1], false);
+  assert.equal("correct" in safe.placements, false);
   assert.equal(safe.note.correct, "use this wording in teaching copy");
 });
 

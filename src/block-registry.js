@@ -50,6 +50,7 @@
     type("multi-select", "question", false, { questionKind: "multi-select" }),
     type("matching", "question", false, { questionKind: "matching" }),
     type("classification", "question", true, { questionKind: "classification" }),
+    type("drag-drop", "question", true, { questionKind: "drag-drop" }),
     type("ordering", "question", false, { questionKind: "ordering" }),
     type("fill-gap", "question", false, { questionKind: "fill-gap" }),
     type("short-response", "question", true, { questionKind: "short-response" }),
@@ -90,6 +91,7 @@
   ns.INTERACTIVE_BLOCK_TYPES = Object.freeze([
     "single-choice",
     "classification",
+    "drag-drop",
     "short-response",
     "reflection",
     "code-editor",

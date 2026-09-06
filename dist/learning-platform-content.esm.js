@@ -93,6 +93,7 @@
     type("multi-select", "question", false, { questionKind: "multi-select" }),
     type("matching", "question", false, { questionKind: "matching" }),
     type("classification", "question", true, { questionKind: "classification" }),
+    type("drag-drop", "question", true, { questionKind: "drag-drop" }),
     type("ordering", "question", false, { questionKind: "ordering" }),
     type("fill-gap", "question", false, { questionKind: "fill-gap" }),
     type("short-response", "question", true, { questionKind: "short-response" }),
@@ -133,6 +134,7 @@
   ns.INTERACTIVE_BLOCK_TYPES = Object.freeze([
     "single-choice",
     "classification",
+    "drag-drop",
     "short-response",
     "reflection",
     "code-editor",
@@ -235,6 +237,100 @@
     return [value];
   }
 
+  function labelledIds(entries, path, field, issues) {
+    var ids = {};
+    var list = [];
+    if (!Array.isArray(entries) || entries.length === 0) {
+      issues.push(issue("MISSING_FIELD", path + ".content." + field, field + " must be a non-empty array"));
+      return list;
+    }
+    entries.forEach(function (entry, index) {
+      var entryPath = path + ".content." + field + "[" + index + "]";
+      var id;
+      var label;
+      if (!isObject(entry)) {
+        issues.push(issue("INVALID_TYPE", entryPath, field + " entries must be objects"));
+        return;
+      }
+      id = typeof entry.id === "string" ? entry.id.trim() : "";
+      label = typeof entry.label === "string" ? entry.label.trim() : "";
+      if (!id) {
+        issues.push(issue("MISSING_FIELD", entryPath + ".id", field.slice(0, -1) + " id is required"));
+      } else if (ids[id]) {
+        issues.push(issue("DUPLICATE_ID", entryPath + ".id", "duplicate " + field.slice(0, -1) + " id '" + id + "'"));
+      } else {
+        ids[id] = true;
+        list.push(id);
+      }
+      if (!label) {
+        issues.push(issue("MISSING_FIELD", entryPath + ".label", field.slice(0, -1) + " label is required"));
+      }
+    });
+    return list;
+  }
+
+  function validateDragDropBlock(block, path, issues) {
+    var content = block.content;
+    var itemIds;
+    var targetIds;
+    var mapping;
+    var usedTargets;
+    var prompt;
+    if (!isObject(content)) {
+      issues.push(issue("MISSING_FIELD", path + ".content", "drag-drop content is required"));
+      return;
+    }
+    prompt = typeof content.prompt === "string" ? content.prompt.trim() : "";
+    if (!prompt) {
+      issues.push(issue("MISSING_FIELD", path + ".content.prompt", "drag-drop prompt is required"));
+    }
+    itemIds = labelledIds(content.items, path, "items", issues);
+    targetIds = labelledIds(content.targets, path, "targets", issues);
+    mapping = content.correct;
+    if (!isObject(mapping)) {
+      issues.push(issue("MISSING_FIELD", path + ".content.correct", "drag-drop correct mapping is required"));
+      return;
+    }
+    usedTargets = {};
+    itemIds.forEach(function (itemId) {
+      var targetId = mapping[itemId];
+      if (typeof targetId !== "string" || !targetId.trim()) {
+        issues.push(issue(
+          "MISSING_FIELD",
+          path + ".content.correct." + itemId,
+          "drag-drop item '" + itemId + "' must map to a target id"
+        ));
+        return;
+      }
+      targetId = targetId.trim();
+      if (targetIds.indexOf(targetId) === -1) {
+        issues.push(issue(
+          "INVALID_RELATIONSHIP",
+          path + ".content.correct." + itemId,
+          "drag-drop item '" + itemId + "' maps to unknown target '" + targetId + "'"
+        ));
+        return;
+      }
+      if (usedTargets[targetId]) {
+        issues.push(issue(
+          "INVALID_RELATIONSHIP",
+          path + ".content.correct." + itemId,
+          "drag-drop target '" + targetId + "' is mapped more than once"
+        ));
+      }
+      usedTargets[targetId] = true;
+    });
+    Object.keys(mapping).forEach(function (itemId) {
+      if (itemIds.indexOf(itemId) === -1) {
+        issues.push(issue(
+          "INVALID_RELATIONSHIP",
+          path + ".content.correct." + itemId,
+          "drag-drop mapping includes unknown item '" + itemId + "'"
+        ));
+      }
+    });
+  }
+
   function validateBlock(block, path, issues) {
     var typeId;
     var registered;
@@ -267,6 +363,9 @@
     }
     if (block.schema && block.schema !== ns.SCHEMAS.BLOCK) {
       issues.push(issue("UNSUPPORTED_SCHEMA", path + ".schema", "inline block schema must be lp.content.block"));
+    }
+    if (registered && typeId === "drag-drop") {
+      validateDragDropBlock(block, path, issues);
     }
   }
 
@@ -976,6 +1075,32 @@
       };
     }
 
+    if (type === "drag-drop") {
+      var dragItems = content.items || [];
+      var placements = response && typeof response === "object" ? response : {};
+      var mapping = content.correct && typeof content.correct === "object" ? content.correct : {};
+      var dragAnswered = dragItems.every(function (item) { return placements[item.id]; });
+      var dragAllCorrect = formative && dragAnswered && dragItems.every(function (item) {
+        return String(placements[item.id]) === String(mapping[item.id]);
+      });
+      return {
+        complete: dragAnswered,
+        correct: formative ? (dragAnswered ? dragAllCorrect : null) : null,
+        itemResults: dragItems.map(function (item) {
+          var selected = placements[item.id];
+          var itemCorrect = formative && selected
+            ? String(selected) === String(mapping[item.id])
+            : null;
+          return { id: item.id, correct: itemCorrect };
+        }),
+        feedback: !formative || !dragAnswered
+          ? ""
+          : (dragAllCorrect
+            ? (content.feedback && content.feedback.correct) || "Those placements match the expected targets."
+            : (content.feedback && content.feedback.incorrect) || "Check the targets and try again.")
+      };
+    }
+
     if (type === "short-response" || type === "reflection") {
       var text = String(response == null ? "" : response).trim();
       return {
@@ -1175,6 +1300,26 @@
         '<fieldset class="lp-fieldset"><legend>' + escapeHtml(content.prompt || "Classify each item") +
         "</legend>" + itemsHtml + "</fieldset>" +
         checkButton(block, "Check types"));
+    },
+    "drag-drop": function (block) {
+      var content = block.content || {};
+      var questionId = content.questionId || block.id;
+      var targets = content.targets || [];
+      var itemsHtml = (content.items || []).map(function (item) {
+        var selectId = "lp-drag-" + (block.id || questionId) + "-" + item.id;
+        var options = ['<option value="">Select a target</option>'].concat(targets.map(function (target) {
+          return '<option value="' + escapeHtml(target.id) + '">' + escapeHtml(target.label) + "</option>";
+        }));
+        return '<div class="lp-classify-item"><label for="' + escapeHtml(selectId) + '">' +
+          escapeHtml(item.label) + '</label><select id="' + escapeHtml(selectId) +
+          '" data-lp-response data-lp-item="' + escapeHtml(item.id) + '">' + options.join("") +
+          '</select><span class="lp-item-status" data-lp-item-status="' + escapeHtml(item.id) +
+          '" role="status"></span></div>';
+      }).join("");
+      return interactiveShell(block, questionId,
+        '<fieldset class="lp-fieldset"><legend>' + escapeHtml(content.prompt || "Place each item") +
+        "</legend>" + itemsHtml + "</fieldset>" +
+        checkButton(block, "Check placement"));
     },
     "short-response": function (block) {
       return textResponseBlock(block, "short-response", 4, "Write a short justification");
@@ -1732,7 +1877,9 @@
   /**
    * Canonical learner-facing marking fields. Must stay aligned with
    * platform.strip_learner_answer_keys in learning-platform-backend.
-   * Boolean `correct` is handled separately (same as the SQL function).
+   * Boolean `correct` and object `correct` maps are handled separately
+   * (same as the SQL function). Teaching strings such as feedback.correct
+   * are retained.
    */
   ns.LEARNER_ANSWER_KEY_FIELDS = Object.freeze([
     "correctOptionId",
@@ -1755,7 +1902,9 @@
 
   function isProtectedKey(key, value) {
     if (PROTECTED[key]) return true;
-    return key === "correct" && typeof value === "boolean";
+    if (key !== "correct") return false;
+    if (typeof value === "boolean") return true;
+    return value !== null && typeof value === "object" && !Array.isArray(value);
   }
 
   ns.stripLearnerAnswerKeys = function (value) {

@@ -2,7 +2,7 @@
 
 Canonical repository: [Acerosa/learning-platform-content](https://github.com/Acerosa/learning-platform-content).
 
-`@learning-platform/content` **0.1.2** is the official Learning Platform curriculum engine. Hubs and Admin must not keep a private copy of schemas, validation, rendering, the block registry, generic importers, sanitisation or the learner-safe package transform.
+`@learning-platform/content` **0.1.3** is the official Learning Platform curriculum engine. Hubs and Admin must not keep a private copy of schemas, validation, rendering, the block registry, generic importers, sanitisation or the learner-safe package transform.
 
 Learner hub production builds must ship a learner-safe derivative of curriculum packages. Authoring JSON in git may still contain marking specs for Admin, catalogue import and tests. Use `learnerSafeContentPlugin` and `check:learner-bundle` from this package rather than a hub-local field list.
 
