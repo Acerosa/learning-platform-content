@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.3] - 2026-09-06
+
+`drag-drop` is a first-class implemented interactive block type. Package
+validation accepts the established learner contract (`prompt`, `items`,
+`targets`, `correct` item-to-target map) and rejects missing fields or
+malformed mappings. Learner-safe packages strip object `correct` mappings
+while keeping teaching strings such as `feedback.correct`.
+
 ## [0.1.2] - 2026-08-31
 
 Learner-safe package transform so learner hub bundles exclude authoritative

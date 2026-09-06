@@ -8,7 +8,7 @@ const root = path.resolve(__dirname, "..");
 test("public package metadata and build outputs exist", function () {
   const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
   assert.equal(pkg.name, "@learning-platform/content");
-  assert.equal(pkg.version, "0.1.2");
+  assert.equal(pkg.version, "0.1.3");
   [
     "dist/learning-platform-content.iife.js",
     "dist/learning-platform-content.cjs.js",

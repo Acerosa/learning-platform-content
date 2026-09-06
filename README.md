@@ -8,7 +8,7 @@ It owns canonical `lp.content.*` schemas, validation, block types, importers, sa
 
 Learner bundles exclude authoritative marking data. Authoring packages keep full marking specs for Admin, catalogue import and tests.
 
-Version **0.1.2**. Schema version **0.1.0**. Tag **v0.1.2**.
+Version **0.1.3**. Schema version **0.1.0**. Tag **v0.1.3**.
 
 ## Install
 

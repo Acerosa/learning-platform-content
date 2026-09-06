@@ -157,6 +157,26 @@
         "</legend>" + itemsHtml + "</fieldset>" +
         checkButton(block, "Check types"));
     },
+    "drag-drop": function (block) {
+      var content = block.content || {};
+      var questionId = content.questionId || block.id;
+      var targets = content.targets || [];
+      var itemsHtml = (content.items || []).map(function (item) {
+        var selectId = "lp-drag-" + (block.id || questionId) + "-" + item.id;
+        var options = ['<option value="">Select a target</option>'].concat(targets.map(function (target) {
+          return '<option value="' + escapeHtml(target.id) + '">' + escapeHtml(target.label) + "</option>";
+        }));
+        return '<div class="lp-classify-item"><label for="' + escapeHtml(selectId) + '">' +
+          escapeHtml(item.label) + '</label><select id="' + escapeHtml(selectId) +
+          '" data-lp-response data-lp-item="' + escapeHtml(item.id) + '">' + options.join("") +
+          '</select><span class="lp-item-status" data-lp-item-status="' + escapeHtml(item.id) +
+          '" role="status"></span></div>';
+      }).join("");
+      return interactiveShell(block, questionId,
+        '<fieldset class="lp-fieldset"><legend>' + escapeHtml(content.prompt || "Place each item") +
+        "</legend>" + itemsHtml + "</fieldset>" +
+        checkButton(block, "Check placement"));
+    },
     "short-response": function (block) {
       return textResponseBlock(block, "short-response", 4, "Write a short justification");
     },

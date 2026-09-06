@@ -7,6 +7,7 @@ test("BlockRegistry lists implemented interactive types", function () {
   [
     "single-choice",
     "classification",
+    "drag-drop",
     "short-response",
     "code-editor",
     "python-exercise",
@@ -19,6 +20,8 @@ test("BlockRegistry lists implemented interactive types", function () {
     assert.equal(record.implemented, true);
   });
   assert.equal(registry.isInteractive("python-exercise"), true);
+  assert.equal(registry.isInteractive("drag-drop"), true);
+  assert.equal(engine.INTERACTIVE_BLOCK_TYPES.includes("drag-drop"), true);
   assert.equal(registry.isRegistered("multiple-choice"), true);
   assert.equal(registry.get("multiple-choice").implemented, false);
 });

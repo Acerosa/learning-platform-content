@@ -6,7 +6,9 @@
   /**
    * Canonical learner-facing marking fields. Must stay aligned with
    * platform.strip_learner_answer_keys in learning-platform-backend.
-   * Boolean `correct` is handled separately (same as the SQL function).
+   * Boolean `correct` and object `correct` maps are handled separately
+   * (same as the SQL function). Teaching strings such as feedback.correct
+   * are retained.
    */
   ns.LEARNER_ANSWER_KEY_FIELDS = Object.freeze([
     "correctOptionId",
@@ -29,7 +31,9 @@
 
   function isProtectedKey(key, value) {
     if (PROTECTED[key]) return true;
-    return key === "correct" && typeof value === "boolean";
+    if (key !== "correct") return false;
+    if (typeof value === "boolean") return true;
+    return value !== null && typeof value === "object" && !Array.isArray(value);
   }
 
   ns.stripLearnerAnswerKeys = function (value) {

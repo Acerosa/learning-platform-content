@@ -59,6 +59,32 @@
       };
     }
 
+    if (type === "drag-drop") {
+      var dragItems = content.items || [];
+      var placements = response && typeof response === "object" ? response : {};
+      var mapping = content.correct && typeof content.correct === "object" ? content.correct : {};
+      var dragAnswered = dragItems.every(function (item) { return placements[item.id]; });
+      var dragAllCorrect = formative && dragAnswered && dragItems.every(function (item) {
+        return String(placements[item.id]) === String(mapping[item.id]);
+      });
+      return {
+        complete: dragAnswered,
+        correct: formative ? (dragAnswered ? dragAllCorrect : null) : null,
+        itemResults: dragItems.map(function (item) {
+          var selected = placements[item.id];
+          var itemCorrect = formative && selected
+            ? String(selected) === String(mapping[item.id])
+            : null;
+          return { id: item.id, correct: itemCorrect };
+        }),
+        feedback: !formative || !dragAnswered
+          ? ""
+          : (dragAllCorrect
+            ? (content.feedback && content.feedback.correct) || "Those placements match the expected targets."
+            : (content.feedback && content.feedback.incorrect) || "Check the targets and try again.")
+      };
+    }
+
     if (type === "short-response" || type === "reflection") {
       var text = String(response == null ? "" : response).trim();
       return {

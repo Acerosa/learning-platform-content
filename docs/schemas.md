@@ -40,3 +40,13 @@ Session kinds: `session`, `independent-study`, `homework`, `revision`,
 `retrieval`.
 
 Statuses: `planned`, `available`, `archived`.
+
+## Interactive block content
+
+Runtime validation is the JavaScript validator. Implemented question types:
+
+- `single-choice` — `prompt`, `options[]` (`id`, `label`), optional `correctOptionId`
+- `classification` — `prompt`, `categories[]`, `items[]` with per-item `correctCategoryId`
+- `drag-drop` — `prompt`, `items[]` (`id`, `label`), `targets[]` (`id`, `label`), `correct` map `{ itemId: targetId }`. Every item must map to a distinct known target. Authoring packages may keep the map; learner-safe packages strip object `correct` mappings.
+- `short-response` / `reflection` — `prompt`
+
