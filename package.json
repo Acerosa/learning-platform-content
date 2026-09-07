@@ -1,6 +1,6 @@
 {
   "name": "@learning-platform/content",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Canonical lp.content.* schemas, validator, importers, block registry and render helpers for Learning Platform hubs and Admin.",
   "license": "MIT",
   "type": "commonjs",

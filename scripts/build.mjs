@@ -60,6 +60,10 @@ export function validatePackage() {
   var api = getLearningPlatformContent();
   return api.validatePackage.apply(api, arguments);
 }
+export function validateLearnerSafePackage() {
+  var api = getLearningPlatformContent();
+  return api.validateLearnerSafePackage.apply(api, arguments);
+}
 export function renderActivity() {
   var api = getLearningPlatformContent();
   return api.renderActivity.apply(api, arguments);
