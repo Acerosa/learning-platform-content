@@ -269,13 +269,14 @@
     return list;
   }
 
-  function validateDragDropBlock(block, path, issues) {
+  function validateDragDropBlock(block, path, issues, mode) {
     var content = block.content;
     var itemIds;
     var targetIds;
     var mapping;
     var usedTargets;
     var prompt;
+    var requireAnswerMap = mode !== "learner-safe";
     if (!isObject(content)) {
       issues.push(issue("MISSING_FIELD", path + ".content", "drag-drop content is required"));
       return;
@@ -288,7 +289,9 @@
     targetIds = labelledIds(content.targets, path, "targets", issues);
     mapping = content.correct;
     if (!isObject(mapping)) {
-      issues.push(issue("MISSING_FIELD", path + ".content.correct", "drag-drop correct mapping is required"));
+      if (requireAnswerMap) {
+        issues.push(issue("MISSING_FIELD", path + ".content.correct", "drag-drop correct mapping is required"));
+      }
       return;
     }
     usedTargets = {};
@@ -331,7 +334,7 @@
     });
   }
 
-  function validateBlock(block, path, issues) {
+  function validateBlock(block, path, issues, mode) {
     var typeId;
     var registered;
     if (!isObject(block)) {
@@ -365,11 +368,11 @@
       issues.push(issue("UNSUPPORTED_SCHEMA", path + ".schema", "inline block schema must be lp.content.block"));
     }
     if (registered && typeId === "drag-drop") {
-      validateDragDropBlock(block, path, issues);
+      validateDragDropBlock(block, path, issues, mode);
     }
   }
 
-  function validateTypedDocument(doc, path, issues) {
+  function validateTypedDocument(doc, path, issues, mode) {
     var schema = doc.schema;
     var metadata = doc.metadata || {};
     var rel = doc.relationships || {};
@@ -415,7 +418,7 @@
         issues.push(issue("MISSING_FIELD", path + ".blocks", "activity must contain a blocks array"));
       } else {
         doc.blocks.forEach(function (block, index) {
-          validateBlock(block, path + ".blocks[" + index + "]", issues);
+          validateBlock(block, path + ".blocks[" + index + "]", issues, mode);
         });
       }
     } else if (schema === ns.SCHEMAS.QUESTION) {
@@ -610,11 +613,11 @@
   ns.validateDocument = function (doc, expectedSchema) {
     var issues = [];
     validateEnvelope(doc, expectedSchema || (doc && doc.schema) || "$", expectedSchema, issues);
-    if (isObject(doc)) validateTypedDocument(doc, (doc.schema || "$") + ":" + (doc.id || "?"), issues);
+    if (isObject(doc)) validateTypedDocument(doc, (doc.schema || "$") + ":" + (doc.id || "?"), issues, "authoring");
     return issues;
   };
 
-  ns.validatePackage = function (pkg) {
+  function validatePackageInternal(pkg, mode) {
     var issues = [];
     var documents;
     var index;
@@ -634,7 +637,7 @@
 
     documents.forEach(function (doc) {
       validateEnvelope(doc, doc.schema + ":" + doc.id, doc.schema, issues);
-      validateTypedDocument(doc, doc.schema + ":" + doc.id, issues);
+      validateTypedDocument(doc, doc.schema + ":" + doc.id, issues, mode);
     });
 
     index = indexBySchema(documents, issues);
@@ -656,6 +659,19 @@
       documents: documents,
       index: index
     };
+  }
+
+  /** Authoring/staff packages: drag-drop answer maps are required. */
+  ns.validatePackage = function (pkg) {
+    return validatePackageInternal(pkg, "authoring");
+  };
+
+  /**
+   * Learner-safe packages: same structural checks, but drag-drop content.correct
+   * may be absent (intentionally stripped). Do not use for authoring publish gates.
+   */
+  ns.validateLearnerSafePackage = function (pkg) {
+    return validatePackageInternal(pkg, "learner-safe");
   };
 
   ns.formatIssues = function (issues) {
@@ -2035,6 +2051,10 @@ export function validateDocument() {
 export function validatePackage() {
   var api = getLearningPlatformContent();
   return api.validatePackage.apply(api, arguments);
+}
+export function validateLearnerSafePackage() {
+  var api = getLearningPlatformContent();
+  return api.validateLearnerSafePackage.apply(api, arguments);
 }
 export function renderActivity() {
   var api = getLearningPlatformContent();

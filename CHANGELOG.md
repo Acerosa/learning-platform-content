@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4] - 2026-09-07
+
+Adds `validateLearnerSafePackage` for published learner delivery. Authoring
+`validatePackage` still requires drag-drop `content.correct`. Learner-safe
+validation accepts stripped answer maps while rejecting malformed item/target
+structure. No change to answer-key stripping.
+
 ## [0.1.3] - 2026-09-06
 
 `drag-drop` is a first-class implemented interactive block type. Package

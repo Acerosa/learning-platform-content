@@ -208,3 +208,39 @@ test("object correct mappings are stripped from learner packages; feedback.corre
   assert.equal("correct" in safe, false);
   assert.equal(safe.feedback.correct, "Well done");
 });
+
+test("authoring validation still requires drag-drop content.correct", function () {
+  const result = validateBlocks([dragDropBlock({ correct: null })]);
+  assert.equal(result.valid, false);
+  assert.ok(result.issues.some(function (issue) {
+    return issue.code === "MISSING_FIELD" && /content\.correct$/.test(issue.path);
+  }));
+});
+
+test("learner-safe validation accepts stripped drag-drop blocks", function () {
+  const authored = samplePackage([activityWithBlocks("demo-activity", [dragDropBlock()])]);
+  const safe = engine.learnerSafePackage(authored);
+  assert.equal("correct" in (safe.activities[0].blocks[0].content || {}), false);
+  const authoring = engine.validatePackage(safe);
+  assert.equal(authoring.valid, false);
+  assert.ok(authoring.issues.some(function (issue) {
+    return issue.code === "MISSING_FIELD" && /content\.correct$/.test(issue.path);
+  }));
+  const learner = engine.validateLearnerSafePackage(safe);
+  assert.equal(learner.valid, true, engine.formatIssues(learner.issues));
+});
+
+test("malformed learner-safe drag-drop structure still fails", function () {
+  const authored = samplePackage([activityWithBlocks("demo-activity", [
+    dragDropBlock({ prompt: "", items: [], targets: [] })
+  ])]);
+  const safe = engine.learnerSafePackage(authored);
+  const learner = engine.validateLearnerSafePackage(safe);
+  assert.equal(learner.valid, false);
+  assert.ok(learner.issues.some(function (issue) {
+    return issue.code === "MISSING_FIELD" && /prompt/.test(issue.path);
+  }));
+  assert.ok(learner.issues.some(function (issue) {
+    return issue.code === "MISSING_FIELD" && /items/.test(issue.path);
+  }));
+});

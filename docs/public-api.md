@@ -50,7 +50,8 @@ COMPAT entry so existing adapters do not rewrite every call.
 | Name | Purpose |
 | --- | --- |
 | `validateDocument(doc, expectedSchema?)` | Validate one envelope. Returns `{ code, path, message }[]`. |
-| `validatePackage(pkg)` | Validate a loaded package. Returns `{ valid, issues }`. |
+| `validatePackage(pkg)` | Validate an authoring package. Drag-drop `content.correct` is required. Returns `{ valid, issues }`. |
+| `validateLearnerSafePackage(pkg)` | Validate a learner-safe package. Same structure as authoring, but stripped drag-drop answer maps are allowed. |
 | `renderActivity(activity, options?)` | HTML for one activity. |
 | `renderWeek(resolved, options?)` | HTML for a resolved week. |
 | `renderSession(resolved, options?)` | HTML for a resolved session. |
